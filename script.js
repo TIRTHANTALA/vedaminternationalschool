@@ -1,5 +1,5 @@
 // Initialize AOS Animation Library
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     AOS.init({
         once: true, // whether animation should happen only once - while scrolling down
         offset: 50, // offset (in px) from the original trigger point
@@ -85,11 +85,11 @@ galleryItems.forEach(item => {
     item.addEventListener('click', (e) => {
         // Prevent default if wrapped in link
         e.preventDefault();
-        
+
         // Set image source and caption
         lightboxImg.src = item.src;
         lightboxCaption.textContent = item.alt;
-        
+
         // Show lightbox with fade in
         lightbox.classList.remove('hidden');
         // Small delay to allow display block to apply before opacity transition
@@ -99,7 +99,7 @@ galleryItems.forEach(item => {
             lightboxImg.classList.remove('scale-95');
             lightboxImg.classList.add('scale-100');
         }, 10);
-        
+
         // Prevent body scroll
         document.body.style.overflow = 'hidden';
     });
@@ -111,7 +111,7 @@ function closeLightbox() {
     lightbox.classList.add('opacity-0');
     lightboxImg.classList.remove('scale-100');
     lightboxImg.classList.add('scale-95');
-    
+
     setTimeout(() => {
         lightbox.classList.add('hidden');
         document.body.style.overflow = 'auto'; // Restore scroll
@@ -136,3 +136,32 @@ document.addEventListener('keydown', (e) => {
         closeLightbox();
     }
 });
+
+// EmailJS Form Submission Logic
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+    contactForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const submitBtn = document.getElementById('submit-btn');
+        const originalBtnText = submitBtn.innerHTML;
+
+        // Change button text to loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Sending...';
+        submitBtn.disabled = true;
+
+        // emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', '#contact-form')
+        emailjs.sendForm('service_sigpwpa', 'template_2m1w299', this)
+            .then(function () {
+                alert('Success! Your inquiry has been sent.');
+                contactForm.reset();
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }, function (error) {
+                console.log('FAILED...', error);
+                alert('Failed to send the inquiry. Please try again later.');
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            });
+    });
+}
